@@ -6,7 +6,7 @@
 python环境配置详见requirements.txt，同时还要确保电脑有安装Google Chrome和Chromedriver,Chromedriver的下载地址 https://chromedriver.chromium.org/downloads。注意Google Chrome和Chromedriver的版本需匹配。
 
 # 运行
-运行main.py前请先将config.py中以下代码信息填写   
+运行main.py前请新建config.py，复制以下代码信息填写   
 ```
 CHROMEDRIVER_PATH = r"/opt/homebrew/bin/chromedriver"    # 需要填入自己电脑chromedriver的地址
 
