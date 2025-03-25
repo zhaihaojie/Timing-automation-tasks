@@ -1,14 +1,14 @@
 # 说明
 这是深圳大学自动抢羽毛球场脚本，包含预约、时间选择、添加同行人、支付的功能。
-羽毛球场地是从还未被预约的场地中进行选择；支付是通过体育经费进行支付，运行前请确保体育经费充足。该脚本仅用于抢第二天的羽毛球场。
+羽毛球场地是从还未被预约的场地中进行选择；支付是通过体育经费进行支付，运行前请确保体育经费充足。
 
 # 配置
 python环境配置详见requirements.txt，同时还要确保电脑有安装Google Chrome和Chromedriver,Chromedriver的下载地址 https://chromedriver.chromium.org/downloads。注意Google Chrome和Chromedriver的版本需匹配。
 
 # 运行
-运行前请先将main.py中以下代码信息填写   
+运行main.py前请先将config.py中以下代码信息填写   
 ```
-chromedriver = r"C:\Program Files\Google\Chrome\Application\chromedriver.exe"    # 需要填入自己电脑chromedriver的地址
+CHROMEDRIVER_PATH = r"/opt/homebrew/bin/chromedriver"    # 需要填入自己电脑chromedriver的地址
 
 # 以下是必填的信息
 username = "XXXXXXXXXX"             # 深圳大学统一认证的账号
