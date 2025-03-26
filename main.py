@@ -137,7 +137,7 @@ def find_available_court(driver, appointment_time, tomorrow_date):
     """查找并选择可用的场地"""
     logger.info(f"开始查找时间段: {appointment_time}, 日期: {tomorrow_date}")
     time.sleep(2)   # 等待页面加载
-    max_iterations = 100  # 减少最大迭代次数以避免无限循环
+    max_iterations = 1000  # 减少最大迭代次数以避免无限循环
     for iteration in range(max_iterations):
         logger.info(f"第{iteration + 1}次查找迭代")
         
@@ -387,7 +387,7 @@ def booking_workflow():
             return False
             
         # 寻找可用场地
-        if not find_available_court(driver, appointment_time, tomorrow):
+        if not find_available_court(driver, appointment_time, today):
             logger.error("未找到可用场地，终止流程")
             return False
             
