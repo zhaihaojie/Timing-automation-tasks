@@ -184,7 +184,7 @@ def find_available_court(driver, appointment_time, tomorrow_date):
                                     By.XPATH, 
                                     "//button[text()='提交预约']",
                                     timeout=2,
-                                    condition="clickable"
+                                    condition="visibility"
                                 )
                                 if submit_btn:
                                     submit_btn.click()
@@ -208,7 +208,7 @@ def add_companions(driver):
         
     try:
         # 点击同行人标签
-        companion_tab = wait_for_element(driver, By.XPATH, "//a[text()='同行人']", timeout=10)
+        companion_tab = wait_for_element(driver, By.CLASS_NAME, 'j-row-txr', timeout=10)
         if companion_tab:
             companion_tab.click()
             logger.info("点击了同行人标签")
@@ -216,8 +216,26 @@ def add_companions(driver):
             logger.error("未找到同行人标签")
             return False
         
+        # 已经添加的同行人
+        # 等待表格加载完成（显式等待）
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "tabledataTable"))
+        )
+        
+        # 定位所有学号所在的<span>元素
+        student_ids = driver.find_elements(By.XPATH, "//table[@id='tabledataTable']//tr/td[3]/span")
+        
+        # 提取学号文本并存入列表
+        ids_list = [sid.text for sid in student_ids]
+        print("学号列表:", ids_list)
+        companions = set(ids_list)
+        print(companions)
         # 添加每个同行人
         for companion_id in companions_id:
+            # 如果已经添加过，则跳过
+            if companion_id in companions:
+                logger.info(f"同行人 {companion_id} 已经添加")
+                continue
             if not companion_id:
                 continue
                 
@@ -225,7 +243,7 @@ def add_companions(driver):
             add_button = wait_for_element(
                 driver, 
                 By.XPATH, 
-                "//button[text()='添加同行人']",
+                '//button[text()="添加同行人"]',
                 timeout=10
             )
             if add_button:
@@ -234,7 +252,7 @@ def add_companions(driver):
             else:
                 logger.error("未找到添加同行人按钮")
                 continue
-                
+            
             # 输入同行人ID并查询
             id_field = wait_for_element(driver, By.ID, "searchId")
             if id_field:
@@ -254,7 +272,7 @@ def add_companions(driver):
                         logger.warning(f"无法确认添加同行人: {companion_id}")
         
         # 关闭同行人窗口
-        close_btn = wait_for_element(driver, By.CLASS_NAME, "jqx-window-close-button")
+        close_btn = wait_for_element(driver, By.XPATH, '//button[text()="关闭"]', timeout=10)
         if close_btn:
             close_btn.click()
             logger.info("已关闭同行人窗口")
@@ -270,7 +288,7 @@ def make_payment(driver):
     """支付预约费用"""
     try:
         # 点击未支付标签
-        unpaid_tab = wait_for_element(driver, By.XPATH, "//a[text()='未支付']", timeout=10)
+        unpaid_tab = wait_for_element(driver, By.XPATH, '//*[@id="row0myBookingInfosTable"]/td[1]/a[3]', timeout=10)
         if unpaid_tab:
             unpaid_tab.click()
             logger.info("进入支付界面")
@@ -350,7 +368,14 @@ def make_payment(driver):
                 return False
         
         logger.info("已输入支付密码")
-            
+        # 确定按钮
+        queding_btn = wait_for_element(driver, By.XPATH, '//*[@id="keybox"]/table/tbody/tr[2]/td[6]/input', timeout=10)
+        if queding_btn:
+            queding_btn.click()
+            logger.info("点击确定按钮")
+        else:
+            logger.error("未找到确定按钮")
+            return False
         # 确认支付
         confirm_btn = wait_for_element(
             driver, 
@@ -373,7 +398,7 @@ def make_payment(driver):
 def booking_workflow():
     """执行完整的预约流程"""
     driver = init_driver()
-    today, tomorrow = get_date_info()
+    date = get_date_info()
     
     try:
         # 登录系统
@@ -387,11 +412,20 @@ def booking_workflow():
             return False
             
         # 寻找可用场地
-        if not find_available_court(driver, appointment_time, today):
+        if not find_available_court(driver, appointment_time,date[index]):
             logger.error("未找到可用场地，终止流程")
             return False
-            
         logger.info("预约提交成功，准备添加同行人和支付")
+
+        # 选择我的预约
+        # my_booking = wait_for_element(driver, By.XPATH, '/html/body/header/header[1]/div/div/div[4]/div[4]/a[3]/div')
+        # if my_booking:
+        #     my_booking.click()
+        #     logger.info("点击我的预约")
+        # else:
+        #     logger.error("未找到我的预约")
+        #     return False
+            
         
         # 添加同行人（如果需要）
         if companions_id and len(companions_id[0]) > 0:
