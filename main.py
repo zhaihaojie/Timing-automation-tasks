@@ -137,7 +137,7 @@ def find_available_court(driver, appointment_time, tomorrow_date):
     """查找并选择可用的场地"""
     logger.info(f"开始查找时间段: {appointment_time}, 日期: {tomorrow_date}")
     time.sleep(2)   # 等待页面加载
-    max_iterations = 1000  # 减少最大迭代次数以避免无限循环
+    max_iterations = 10000  # 减少最大迭代次数以避免无限循环
     for iteration in range(max_iterations):
         logger.info(f"第{iteration + 1}次查找迭代")
         
@@ -233,6 +233,9 @@ def add_companions(driver):
         # 添加每个同行人
         for companion_id in companions_id:
             # 如果已经添加过，则跳过
+            if companion_id == username:
+                logger.info(f"跳过自己的账号: {companion_id}")
+                continue
             if companion_id in companions:
                 logger.info(f"同行人 {companion_id} 已经添加")
                 continue
@@ -417,7 +420,7 @@ def booking_workflow():
             return False
         logger.info("预约提交成功，准备添加同行人和支付")
 
-        # 选择我的预约
+        # # 选择我的预约
         # my_booking = wait_for_element(driver, By.XPATH, '/html/body/header/header[1]/div/div/div[4]/div[4]/a[3]/div')
         # if my_booking:
         #     my_booking.click()
