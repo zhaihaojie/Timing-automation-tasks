@@ -3,7 +3,9 @@
 羽毛球场地是从还未被预约的场地中进行选择；支付是通过体育经费进行支付，运行前请确保体育经费充足。
 
 # 配置
-python环境配置详见requirements.txt，同时还要确保电脑有安装Google Chrome和Chromedriver,Chromedriver的下载地址 https://chromedriver.chromium.org/downloads。注意Google Chrome和Chromedriver的版本需匹配。
+python环境配置详见requirements.txt，同时还要确保电脑有安装Google Chrome和Chromedriver,Chromedriver的下载地址 https://chromedriver.chromium.org/downloads。
+
+注意Google Chrome和Chromedriver的版本需匹配。
 
 # 运行
 运行main.py前请新建config.py，复制以下代码信息填写   
