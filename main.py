@@ -112,7 +112,7 @@ def select_venue_type(driver):
     """选择校区和运动类型"""
     try:
         # 选择粤海校区
-        campus = wait_for_element(driver, By.XPATH, "//div[text()='粤海校区']", timeout=15)
+        campus = wait_for_element(driver, By.XPATH, f"//div[text()='{xiaoqu}']", timeout=15)
         if campus:
             campus.click()
             logger.info("已选择粤海校区")
@@ -121,13 +121,13 @@ def select_venue_type(driver):
             return False
             
         # 选择羽毛球
-        sport = wait_for_element(driver, By.XPATH, "//div[text()='羽毛球']", timeout=10)
+        sport = wait_for_element(driver, By.XPATH, f"//div[text()='{sport_type}']", timeout=10)
         if sport:
             sport.click()
-            logger.info("已选择羽毛球")
+            logger.info(f"已选择{sport_type}")
             return True
         else:
-            logger.error("无法选择羽毛球")
+            logger.error(f"无法选择{sport_type}")
             return False
     except Exception as e:
         logger.error(f"选择场馆类型时出错: {e}")
@@ -174,7 +174,7 @@ def find_available_court(driver, appointment_time, tomorrow_date):
                         courts = wait_for_elements(driver, By.CSS_SELECTOR, ".group-2", timeout=2)
                         for court in courts:
                             court_text = court.text
-                            if  ("可预约" in court_text) and ("羽毛球场" in court_text):
+                            if  ("可预约" in court_text) and (f"{site}" in court_text):
                                 logger.info(f"找到可预约场地: {court_text}")
                                 court.click()
                                 
